@@ -1,0 +1,34 @@
+[package]
+name = "syslinux-conf"
+description = "Converts syslinux configuration file into JSON"
+version = "0.0.1"
+authors = [ "Ivan Mironov <mironov.ivan@gmail.com>" ]
+build = "build.rs"
+
+[lib]
+name = "syslinux_conf"
+path = "src/lib/lib.rs"
+
+[build-dependencies]
+syntex = "*"
+serde_codegen = "*"
+
+[dependencies]
+nom = "*"
+custom_derive = "*"
+enum_derive = "*"
+serde = "*"
+log = "*"
+env_logger = "*"
+
+[dependencies.linked-hash-map]
+version = "*"
+features = [ "serde_impl" ]
+
+[dependencies.serde_json]
+version = "*"
+features = [ "preserve_order" ]
+
+[dependencies.clap]
+version = "*"
+features = [ "suggestions", "color" ]

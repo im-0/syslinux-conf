@@ -1,0 +1,59 @@
+use std;
+
+extern crate linked_hash_map;
+
+#[derive(Debug, Serialize, Deserialize)]
+pub enum KernelFile {
+    Linux(std::path::PathBuf),
+    Boot(std::path::PathBuf),
+    BSS(std::path::PathBuf),
+    PXE(std::path::PathBuf),
+    FDImage(std::path::PathBuf),
+    ComBoot(std::path::PathBuf),
+    Com32(std::path::PathBuf),
+}
+
+#[derive(Debug, Default, Serialize, Deserialize)]
+pub struct Kernel {
+    pub kernel_file: Option<KernelFile>,
+    pub initrd: Option<std::path::PathBuf>,
+    pub fdt_dir: Option<std::path::PathBuf>,
+    pub append: Option<String>,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+pub enum KernelOrConfig {
+    Kernel(Kernel),
+}
+
+impl Default for KernelOrConfig {
+    fn default() -> KernelOrConfig {
+        KernelOrConfig::Kernel(Kernel::default())
+    }
+}
+
+#[derive(Debug, Default, Serialize, Deserialize)]
+pub struct Label {
+    pub text_help: Option<String>,
+    pub kernel_or_config: KernelOrConfig,
+    pub say: Option<String>,
+    pub display: Option<std::path::PathBuf>,
+}
+
+#[derive(Debug, Default, Serialize, Deserialize)]
+pub struct Global {
+    pub default: Option<String>,
+    pub ontimeout: Option<String>,
+    pub onerror: Option<String>,
+    pub timeout: Option<f64>,
+    pub total_timeout: Option<f64>,
+    pub label_defaults: Label,
+}
+
+pub type Labels = linked_hash_map::LinkedHashMap<String, Label>;
+
+#[derive(Debug, Serialize, Deserialize)]
+pub struct SyslinuxConf {
+    pub global: Global,
+    pub labels: Labels,
+}

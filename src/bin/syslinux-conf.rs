@@ -11,7 +11,7 @@ fn main() {
     env_logger::init().unwrap();
 
     let matches = clap::App::new("syslinux-tool")
-        .about(env!("CARGO_PKG_DESCRIPTION"))
+        .about("Converts syslinux configuration file into JSON")
         .version(env!("CARGO_PKG_VERSION"))
         .arg(clap::Arg::with_name("type")
             .help("Type of syslinux configuration. Only for autodetect.")

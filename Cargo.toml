@@ -1,6 +1,6 @@
 [package]
 name = "syslinux-conf"
-description = "Converts syslinux configuration file into JSON"
+description = "Parser for syslinux configuration files"
 version = "0.0.1"
 authors = [ "Ivan Mironov <mironov.ivan@gmail.com>" ]
 build = "build.rs"

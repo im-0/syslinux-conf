@@ -228,17 +228,29 @@ impl Reader {
         }
     }
 
+    fn check_paths(self) -> Result<Reader, ReaderError> {
+        let root_dir = try!(std::fs::canonicalize(&self.root_dir));
+        let conf_dir = try!(std::fs::canonicalize(&self.conf_dir));
+        match conf_dir.starts_with(root_dir) {
+            true => Ok(self),
+            false => Err(ReaderError{}),
+        }
+    }
+
     pub fn from_local_conf_file_path(root: std::path::PathBuf,
                                      conf_file_path: std::path::PathBuf)
             -> Result<Reader, ReaderError> {
-        Ok(Reader{
+        Reader{
             root_dir: root,
             conf_dir: match conf_file_path.parent() {
-                Some(conf_dir) => conf_dir.to_path_buf(),
+                Some(conf_dir) => match conf_dir == std::path::Path::new("") {
+                    true => std::path::PathBuf::from("."),
+                    false => conf_dir.to_path_buf(),
+                },
                 None => return Err(ReaderError{}),
             },
             conf_file_path: conf_file_path,
-        })
+        }.check_paths()
     }
 
     fn from_existing_local_conf(root: std::path::PathBuf,

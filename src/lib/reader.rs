@@ -221,21 +221,21 @@ impl PathResolver for types::SyslinuxConf {
 
 impl Reader {
     fn find_existing_local_conf(paths: Vec<std::path::PathBuf>)
-            -> Result<std::path::PathBuf, ()> {
+            -> Result<std::path::PathBuf, ReaderError> {
         match paths.into_iter().find(|path| path.exists()) {
             Some(path) => Ok(path),
-            None => Err(()),
+            None => Err(ReaderError{}),
         }
     }
 
     pub fn from_local_conf_file_path(root: std::path::PathBuf,
                                      conf_file_path: std::path::PathBuf)
-            -> Result<Reader, ()> {
+            -> Result<Reader, ReaderError> {
         Ok(Reader{
             root_dir: root,
             conf_dir: match conf_file_path.parent() {
                 Some(conf_dir) => conf_dir.to_path_buf(),
-                None => return Err(()),
+                None => return Err(ReaderError{}),
             },
             conf_file_path: conf_file_path,
         })
@@ -243,20 +243,20 @@ impl Reader {
 
     fn from_existing_local_conf(root: std::path::PathBuf,
                                 paths: Vec<std::path::PathBuf>)
-            -> Result<Reader, ()> {
+            -> Result<Reader, ReaderError> {
         Reader::from_local_conf_file_path(
             root,
             try!(Reader::find_existing_local_conf(paths)))
     }
 
     pub fn from_local_type(root: std::path::PathBuf, local_type: LocalConfType)
-            -> Result<Reader, ()> {
+            -> Result<Reader, ReaderError> {
         Reader::from_existing_local_conf(
             root.clone(),
             local_type.get_paths(root))
     }
 
-    pub fn from_local(root: std::path::PathBuf) -> Result<Reader, ()> {
+    pub fn from_local(root: std::path::PathBuf) -> Result<Reader, ReaderError> {
         Reader::from_existing_local_conf(
             root.clone(),
             LocalConfType::get_all_paths(root))

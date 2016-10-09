@@ -48,9 +48,9 @@ impl LocalConfType {
 
 #[derive(Debug)]
 pub struct Reader {
-    pub root_dir: std::path::PathBuf,
-    pub conf_dir: std::path::PathBuf,
-    pub conf_file_path: std::path::PathBuf,
+    root_dir: std::path::PathBuf,
+    conf_dir: std::path::PathBuf,
+    conf_file_path: std::path::PathBuf,
 }
 
 // TODO: Detailed errors.

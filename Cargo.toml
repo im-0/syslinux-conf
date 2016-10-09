@@ -1,6 +1,8 @@
 [package]
 name = "syslinux-conf"
 description = "Parser for syslinux configuration files"
+homepage = "https://github.com/im-0/syslinux-conf"
+repository = "https://github.com/im-0/syslinux-conf"
 version = "0.0.1"
 authors = [ "Ivan Mironov <mironov.ivan@gmail.com>" ]
 build = "build.rs"

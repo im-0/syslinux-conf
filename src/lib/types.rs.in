@@ -17,7 +17,7 @@ pub trait ApplyDefaults {
     fn apply_defaults(self, defaults: &Self) -> Self;
 }
 
-#[derive(Debug, Default, Serialize, Deserialize)]
+#[derive(Debug, Clone, Default, Serialize, Deserialize)]
 pub struct Kernel {
     pub kernel_file: Option<KernelFile>,
     pub initrd: Option<std::path::PathBuf>,
@@ -36,7 +36,7 @@ impl ApplyDefaults for Kernel {
     }
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum KernelOrConfig {
     Kernel(Kernel),
 }
@@ -61,7 +61,7 @@ impl ApplyDefaults for KernelOrConfig {
     }
 }
 
-#[derive(Debug, Default, Serialize, Deserialize)]
+#[derive(Debug, Clone, Default, Serialize, Deserialize)]
 pub struct Label {
     pub text_help: Option<String>,
     pub kernel_or_config: KernelOrConfig,
@@ -82,7 +82,7 @@ impl ApplyDefaults for Label {
     }
 }
 
-#[derive(Debug, Default, Serialize, Deserialize)]
+#[derive(Debug, Clone, Default, Serialize, Deserialize)]
 pub struct Global {
     pub default: Option<String>,
     pub ontimeout: Option<String>,
@@ -94,7 +94,7 @@ pub struct Global {
 
 pub type Labels = linked_hash_map::LinkedHashMap<String, Label>;
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct SyslinuxConf {
     pub global: Global,
     pub labels: Labels,

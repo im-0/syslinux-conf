@@ -13,7 +13,7 @@ pub enum KernelFile {
     Com32(std::path::PathBuf),
 }
 
-trait ApplyDefaults {
+pub trait ApplyDefaults {
     fn apply_defaults(self, defaults: &Self) -> Self;
 }
 

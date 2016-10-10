@@ -89,7 +89,7 @@ fn main() {
     };
 
     use std::io::Write;
-    match std::io::stdout().write(&json.into_bytes()[..]) {
+    match std::io::stdout().write_all(&json.into_bytes()[..]) {
         Ok(_) => (),
         Err(_) => {
             error!("Unable to write JSON to stdout");

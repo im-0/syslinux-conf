@@ -2,7 +2,7 @@ use std;
 
 extern crate linked_hash_map;
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum KernelFile {
     Linux(std::path::PathBuf),
     Boot(std::path::PathBuf),
@@ -13,12 +13,27 @@ pub enum KernelFile {
     Com32(std::path::PathBuf),
 }
 
+trait ApplyDefaults {
+    fn apply_defaults(self, defaults: &Self) -> Self;
+}
+
 #[derive(Debug, Default, Serialize, Deserialize)]
 pub struct Kernel {
     pub kernel_file: Option<KernelFile>,
     pub initrd: Option<std::path::PathBuf>,
     pub fdt_dir: Option<std::path::PathBuf>,
     pub append: Option<String>,
+}
+
+impl ApplyDefaults for Kernel {
+    fn apply_defaults(self, defaults: &Kernel) -> Kernel {
+        Kernel{
+            kernel_file: self.kernel_file.or(defaults.kernel_file.clone()),
+            initrd:      self.initrd.or(defaults.initrd.clone()),
+            fdt_dir:     self.fdt_dir.or(defaults.fdt_dir.clone()),
+            append:      self.append.or(defaults.append.clone()),
+        }
+    }
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -32,12 +47,39 @@ impl Default for KernelOrConfig {
     }
 }
 
+impl ApplyDefaults for KernelOrConfig {
+    fn apply_defaults(self, defaults: &KernelOrConfig) -> KernelOrConfig {
+        match self {
+            KernelOrConfig::Kernel(kernel) => {
+                match defaults {
+                    &KernelOrConfig::Kernel(ref defaults) => {
+                        KernelOrConfig::Kernel(kernel.apply_defaults(&defaults))
+                    },
+                }
+            },
+        }
+    }
+}
+
 #[derive(Debug, Default, Serialize, Deserialize)]
 pub struct Label {
     pub text_help: Option<String>,
     pub kernel_or_config: KernelOrConfig,
     pub say: Option<String>,
     pub display: Option<std::path::PathBuf>,
+}
+
+impl ApplyDefaults for Label {
+    fn apply_defaults(self, defaults: &Label) -> Label {
+        Label{
+            text_help: self.text_help.or(defaults.text_help.clone()),
+            say:       self.say.or(defaults.say.clone()),
+            display:   self.display.or(defaults.display.clone()),
+
+            kernel_or_config: self.kernel_or_config.apply_defaults(
+                &defaults.kernel_or_config),
+        }
+    }
 }
 
 #[derive(Debug, Default, Serialize, Deserialize)]

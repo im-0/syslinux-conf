@@ -7,7 +7,7 @@ mod parser;
 mod reader;
 mod types;
 
-pub use reader::{LocalConfType, Reader};
+pub use reader::{LocalConfType, Reader, ReaderError};
 pub use types::*;
 
 // TODO: Tests.
